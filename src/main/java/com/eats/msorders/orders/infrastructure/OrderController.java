@@ -6,6 +6,7 @@ import com.eats.msorders.orders.domain.Order;
 import com.eats.msorders.orders.infrastructure.dto.CreateOrderRequest;
 import com.eats.msorders.orders.infrastructure.dto.CreateOrderResponse;
 import com.eats.msorders.orders.infrastructure.dto.ItemsRequest;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -21,9 +22,11 @@ import java.util.Set;
 public class OrderController {
 
     private final OrderService service;
+    private final RabbitTemplate rabbitTemplate;
 
-    public OrderController(OrderService service) {
+    public OrderController(OrderService service, RabbitTemplate rabbitTemplate) {
         this.service = service;
+        this.rabbitTemplate = rabbitTemplate;
     }
 
     @PostMapping
@@ -31,14 +34,17 @@ public class OrderController {
     public ResponseEntity<CreateOrderResponse> createOrder(@RequestBody @Valid CreateOrderRequest request) {
         Order order = service.createOrderAndItems(request);
 
-        return ResponseEntity
-                .ok(new CreateOrderResponse(
-                        order.getId(),
-                        order.getPrice(),
-                        order.getStatus(),
-                        order.getUserId(),
-                        order.getItems()
-                ));
+        CreateOrderResponse orderResponse = new CreateOrderResponse(
+                order.getId(),
+                order.getPrice(),
+                order.getStatus(),
+                order.getUserId(),
+                order.getItems()
+        );
+
+        rabbitTemplate.convertAndSend("orders.ex", "", orderResponse);
+
+        return ResponseEntity.ok(orderResponse);
     }
 
 }
