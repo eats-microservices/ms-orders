@@ -72,4 +72,8 @@ public class Order {
     public Instant getUpdatedAt() {
         return updatedAt;
     }
+
+    public void setStatus(OrderStatus status) {
+        this.status = status;
+    }
 }

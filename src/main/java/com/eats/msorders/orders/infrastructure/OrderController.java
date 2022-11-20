@@ -8,10 +8,7 @@ import com.eats.msorders.orders.infrastructure.dto.CreateOrderResponse;
 import com.eats.msorders.orders.infrastructure.dto.ItemsRequest;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.transaction.Transactional;
 import javax.validation.Valid;
@@ -46,5 +43,4 @@ public class OrderController {
 
         return ResponseEntity.ok(orderResponse);
     }
-
 }
