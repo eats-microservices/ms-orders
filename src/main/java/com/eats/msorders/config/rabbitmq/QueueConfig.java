@@ -5,7 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-public class NewOrderQueueConfig {
+public class QueueConfig {
 
     /* New order queue */
     @Bean
@@ -23,7 +23,7 @@ public class NewOrderQueueConfig {
     }
 
     @Bean
-    public Binding bindQueueIntoExchange(FanoutExchange fanoutExchange) {
+    public Binding bindQueueIntoExchange() {
         return BindingBuilder
                 .bind(newOrderQueue())
                 .to(fanoutExchange());
@@ -35,5 +35,17 @@ public class NewOrderQueueConfig {
         return QueueBuilder
                 .nonDurable("payments.payment-done")
                 .build();
+    }
+
+    @Bean
+    public DirectExchange paymentExchange() {
+        return ExchangeBuilder
+                .directExchange("payments.ex")
+                .build();
+    }
+
+    @Bean
+    public Binding bindPaymentQueueIntoPaymentExchange() {
+        return BindingBuilder.bind(paymentDoneQueue()).to(paymentExchange()).with("payments.payment-done");
     }
 }

@@ -1,11 +1,11 @@
 version: '3'
 services:
-  db-menu:
+  db-orders:
     image: 'postgres:alpine'
     volumes:
       - dborders-volume:/var/lib/postgresql/data
     ports:
-      - 5432:5432
+      - 5433:5432
     environment:
       POSTGRES_USER: user
       POSTGRES_PASSWORD: 123456
