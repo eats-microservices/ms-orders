@@ -3,7 +3,7 @@ spring:
     name: ms-orders
 
   datasource:
-    url: jdbc:postgresql://localhost:5433/ordersdb
+    url: ${DB_URL:jdbc:postgresql://localhost:5433/ordersdb}
     username: user
     password: 123456
 
